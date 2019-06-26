@@ -1,0 +1,62 @@
+spring:
+  aop:
+    proxy-target-class: true
+  application:
+    name: mall-admin
+  security:
+    user:
+      name: 123
+      password: 123
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: heyang
+    druid:
+      initial-size: 5 #连接池初始化大小
+      min-idle: 10 #最小空闲连接数
+      max-active: 20 #最大连接数
+      web-stat-filter:
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" #不统计这些请求数据
+      stat-view-servlet: #访问监控网页的登录用户名和密码
+        login-username: druid
+        login-password: druid
+    driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    stream:
+      bindings:
+        defaultRabbit:
+          type: rabbit
+          environment: #配置rabbimq连接环境
+            spring:
+              rabbitmq:
+                host: 127.0.0.1
+                port: 5672
+                username: guest
+                password: guest
+                virtual-host: /
+      binders:
+        output:
+          destination: MyOutput  #exchange名称，交换模式默认是topic
+          content-type: application/json
+        input:
+          destination: MyInput
+          content-type: application/json
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: mySecret #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24)
+  tokenHead: Bearer  #JWT负载中拿到开头
+mybatis:
+  mapper-locations: classpath:*/*.xml
+
+eureka:
+  instance:
+    hostname: localhost
+    appname: mall-admin
+  client:
+    service-url:
+      defaultZone: http://localhost:1001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+server:
+  port: 8080
